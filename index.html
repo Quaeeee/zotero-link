@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Open in Zotero</title>
+<style>
+  :root { color-scheme: light dark; --bg:#f4f4f2; --fg:#1b1b1b; --muted:#666; --accent:#c4262e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161616; --fg:#eee; --muted:#aaa; --accent:#ff6b6f; } }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--fg); font:17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         padding:24px; box-sizing:border-box; }
+  main { max-width:340px; text-align:center; display:flex; flex-direction:column; gap:14px; }
+  a.btn { display:block; padding:12px 16px; border-radius:10px; text-decoration:none; font-weight:600; }
+  a.app { background:var(--accent); color:#fff; }
+  a.web { color:var(--accent); border:1px solid currentColor; }
+  p { margin:0; color:var(--muted); font-size:15px; }
+</style>
+</head>
+<body>
+<main>
+  <p id="msg">Opening Zotero…</p>
+  <a class="btn app" id="app" href="#">Open in Zotero app</a>
+  <a class="btn web" id="web" href="#">Open in Zotero web library</a>
+</main>
+<script>
+// Relay for links from Que's Reading Log: ?k=ITEMKEY opens that item in the Zotero app
+// (zotero://select/...), which pages inside the Reading Log can't open directly.
+// It only reads the item key from the address. It stores and sends nothing.
+(function () {
+  var USERNAME = "quaeeee";
+  var key = (new URLSearchParams(location.search).get("k") || "").toUpperCase();
+  if (!/^[A-Z0-9]{8}$/.test(key)) {
+    document.getElementById("msg").textContent = "This link is missing a Zotero item.";
+    document.getElementById("app").style.display = "none";
+    document.getElementById("web").style.display = "none";
+    return;
+  }
+  var app = "zotero://select/library/items/" + key;
+  document.getElementById("app").href = app;
+  document.getElementById("web").href = "https://www.zotero.org/" + USERNAME + "/items/" + key;
+  document.getElementById("msg").textContent = "Opening Zotero… If nothing happens, tap a button below.";
+  location.href = app;
+})();
+</script>
+</body>
+</html>
